@@ -241,25 +241,32 @@
     <p style="font-size:0.68rem; color:var(--muted);">Built with HTML &amp; CSS</p>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let W, H, particles = [];
-    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-    resize();
-    window.addEventListener('resize', () => { resize(); init(); });
-    class Particle {
-      constructor() { this.reset(); }
-      reset() { this.x = Math.random()*W; this.y = Math.random()*H; this.size = Math.random()*1.5+0.3; this.speedX = (Math.random()-0.5)*0.3; this.speedY = (Math.random()-0.5)*0.3; this.opacity = Math.random()*0.4+0.05; this.life = Math.random()*200+100; this.age = 0; }
-      update() { this.x += this.speedX; this.y += this.speedY; this.age++; if (this.age > this.life || this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset(); }
-      draw() { const fade = Math.sin((this.age/this.life)*Math.PI); ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fillStyle = `rgba(77,158,250,${this.opacity*fade})`; ctx.fill(); }
-    }
-    function init() { particles = []; const count = Math.floor((W*H)/12000); for (let i = 0; i < count; i++) { const p = new Particle(); p.age = Math.random()*p.life; particles.push(p); } }
-    function animate() {
-      ctx.clearRect(0, 0, W, H);
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i+1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < 100) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(77,158,250,${0.06*(1-dist/100)})`; ctx
+  <script>
+      const canvas = document.getElementById('bg-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, particles = [];
+      function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+      resize();
+      window.addEventListener('resize', () => { resize(); init(); });
+      class Particle {
+        constructor() { this.reset(); }
+        reset() { this.x = Math.random()*W; this.y = Math.random()*H; this.size = Math.random()*2.5+0.5; this.speedX = (Math.random()-0.5)*0.3; this.speedY = (Math.random()-0.5)*0.3; this.opacity = Math.random()*0.6+0.1; this.life = Math.random()*200+100; this.age = 0; }
+        update() { this.x += this.speedX; this.y += this.speedY; this.age++; if (this.age > this.life || this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset(); }
+        draw() { const fade = Math.sin((this.age/this.life)*Math.PI); ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fillStyle = `rgba(77,158,250,${this.opacity*fade})`; ctx.fill(); }
+      }
+      function init() { particles = []; const count = Math.floor((W*H)/12000); for (let i = 0; i < count; i++) { const p = new Particle(); p.age = Math.random()*p.life; particles.push(p); } }
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i+1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 100) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(77,158,250,${0.06*(1-dist/100)})`; ctx.lineWidth = 0.5; ctx.stroke(); }
+          }
+        }
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
+      }
+      init(); animate();
+    </script>
